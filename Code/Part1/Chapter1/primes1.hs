@@ -1,27 +1,16 @@
--- Is Integer 
-isInt x = x == fromInteger (round x)
-
--- Is Divisor List 
-isDivisors x = [ isInt z 
-                    | z <- [x/i 
-                    | i <- [2,3..sqrt(x)]] ]
--- Is Prime
-isPrime x = not (elem True (isDivisors x))
+-- Integer Square Root
+intSqrt :: (Integral a) => a -> Integer
+intSqrt x =  round (sqrt (fromIntegral x))
 
 -- Divisor Tuples
-dt x = [ z 
-         | z <- [(x/i,i) 
-         | i <- [2,3..sqrt(x)]], isInt (fst z)]
-
--- Greatest Factor Tuple 
-gft x
-    | z == [] = (x,1)
-    | otherwise = last z
-    where z = dt x
+dt :: Integer -> [(Integer, Integer)]
+dt x = [ (quot x i,i) 
+        | i <- [k,k-1..1], mod x i == 0]
+        where k = intSqrt(x)
 
 -- Prime Factors 
+pfs :: Integer -> [Integer]
 pfs x
     | elem 1 z = [x]
     | otherwise = pfs (fst z) ++ pfs (snd z)
-    where z = gft x
-
+    where z = head (dt x)
